@@ -1,8 +1,8 @@
-package pl.dpajak.company.dao.csv;
+package spring.dao.csv;
 
+import spring.dao.AccountDao;
+import spring.model.Account;
 import org.springframework.core.io.Resource;
-import pl.dpajak.company.dao.AccountDao;
-import pl.dpajak.company.model.Account;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,29 +14,25 @@ import java.util.Date;
 import java.util.List;
 
 public class CsvAccountDao implements AccountDao {
-
   private Resource csvResource;
-
   public void setCsvResource(Resource csvFile) {
     this.csvResource = csvFile;
   }
 
-  @Override
   public List<Account> findAll() throws Exception {
-    List<Account> results = new ArrayList<>();
+    List<Account> results = new ArrayList<Account>();
     DateFormat fmt = new SimpleDateFormat("MMddyyyy");
     BufferedReader br = new BufferedReader(new FileReader(csvResource.getFile()));
     String line;
 
-    while((line = br.readLine()) != null ) {
+    while ((line = br.readLine()) != null) {
       String[] fields = line.split(",");
       String accountNo = fields[0];
       BigDecimal balance = new BigDecimal(fields[1]);
       Date lastPaidOn = fmt.parse(fields[2]);
-      Account account = new Account(accountNo, balance, lastPaidOn);
+      Account account = new Account(accountNo,balance,lastPaidOn);
       results.add(account);
     }
-
     br.close();
     return results;
   }
